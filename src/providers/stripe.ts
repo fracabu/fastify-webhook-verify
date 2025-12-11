@@ -52,7 +52,7 @@ export class StripeProvider extends BaseProvider {
     if (!timestamp) {
       throw new Error('Timestamp is required for Stripe webhook verification');
     }
-    const ts = Math.floor(timestamp.getTime() / 1000);
+    const ts = String(Math.floor(timestamp.getTime() / 1000));
     const payload = `${ts}.${rawBody.toString()}`;
     return this.createHmac(payload, secret);
   }

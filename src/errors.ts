@@ -6,7 +6,7 @@ export class WebhookError extends Error {
   public readonly statusCode: number;
   public readonly provider: string | undefined;
 
-  constructor(code: string, message: string, statusCode: number = 401, provider?: string) {
+  constructor(code: string, message: string, statusCode = 401, provider?: string) {
     super(message);
     this.name = 'WebhookError';
     this.code = code;

@@ -7,32 +7,32 @@ class InMemoryReplayStorage implements ReplayStorage {
   private readonly nonces = new Map<string, number>();
   private cleanupInterval: ReturnType<typeof setInterval> | null = null;
 
-  constructor(_ttl: number = 300) {
+  constructor(_ttl = 300) {
     // Cleanup every minute
     this.cleanupInterval = setInterval(() => {
       void this.cleanup();
     }, 60000);
     // Prevent interval from blocking Node.js exit
-    if (this.cleanupInterval.unref) {
-      this.cleanupInterval.unref();
-    }
+    this.cleanupInterval.unref();
   }
 
-  async has(nonce: string): Promise<boolean> {
-    return this.nonces.has(nonce);
+  has(nonce: string): Promise<boolean> {
+    return Promise.resolve(this.nonces.has(nonce));
   }
 
-  async set(nonce: string, expiresAt: number): Promise<void> {
+  set(nonce: string, expiresAt: number): Promise<void> {
     this.nonces.set(nonce, expiresAt);
+    return Promise.resolve();
   }
 
-  async cleanup(): Promise<void> {
+  cleanup(): Promise<void> {
     const now = Date.now();
     for (const [nonce, expiresAt] of this.nonces) {
       if (expiresAt < now) {
         this.nonces.delete(nonce);
       }
     }
+    return Promise.resolve();
   }
 
   destroy(): void {

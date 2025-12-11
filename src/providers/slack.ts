@@ -36,7 +36,7 @@ export class SlackProvider extends BaseProvider {
     if (!timestamp) {
       throw new Error('Timestamp is required for Slack webhook verification');
     }
-    const ts = Math.floor(timestamp.getTime() / 1000);
+    const ts = String(Math.floor(timestamp.getTime() / 1000));
     const payload = `v0:${ts}:${rawBody.toString()}`;
     return this.createHmac(payload, secret);
   }

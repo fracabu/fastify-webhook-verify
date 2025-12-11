@@ -24,7 +24,7 @@ const DEFAULT_REPLAY_PROTECTION: ReplayProtectionConfig = {
 /**
  * Main plugin implementation
  */
-export async function fastifyWebhookVerifyPlugin(
+export function fastifyWebhookVerifyPlugin(
   fastify: FastifyInstance,
   options: FastifyWebhookVerifyOptions
 ): Promise<void> {
@@ -58,7 +58,7 @@ export async function fastifyWebhookVerifyPlugin(
     'application/json',
     { parseAs: 'buffer' },
     (req, body: Buffer, done) => {
-      (req as FastifyRequest).rawBody = body;
+      (req as unknown as FastifyRequest).rawBody = body;
       try {
         const json: unknown = JSON.parse(body.toString());
         done(null, json);
@@ -189,7 +189,7 @@ export async function fastifyWebhookVerifyPlugin(
 
       // 7. Check replay (nonce check)
       if (replayGuard && rpConfig.enabled && timestamp) {
-        const nonce = `${providerName}:${signature}:${timestamp.getTime()}`;
+        const nonce = `${providerName}:${signature}:${String(timestamp.getTime())}`;
         const isDuplicate = await replayGuard.check(nonce);
 
         if (isDuplicate) {
@@ -243,4 +243,6 @@ export async function fastifyWebhookVerifyPlugin(
   fastify.decorate('webhookVerify', (routeOptions: WebhookRouteOptions) => {
     return createVerifyHandler(routeOptions);
   });
+
+  return Promise.resolve();
 }
