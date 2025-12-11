@@ -1,0 +1,104 @@
+{
+  "name": "fastify-webhook-verify",
+  "version": "1.0.0",
+  "description": "Multi-provider webhook signature verification for Fastify with replay protection and TypeScript support",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./providers": {
+      "import": {
+        "types": "./dist/providers/index.d.ts",
+        "default": "./dist/providers/index.js"
+      },
+      "require": {
+        "types": "./dist/providers/index.d.cts",
+        "default": "./dist/providers/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run lint && npm run typecheck && npm run test && npm run build",
+    "clean": "rimraf dist coverage",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "fastify",
+    "fastify-plugin",
+    "webhook",
+    "signature",
+    "verification",
+    "stripe",
+    "github",
+    "twilio",
+    "slack",
+    "shopify",
+    "security",
+    "hmac",
+    "replay-protection",
+    "typescript"
+  ],
+  "author": "fracabu",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fracabu/fastify-webhook-verify.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fracabu/fastify-webhook-verify/issues"
+  },
+  "homepage": "https://github.com/fracabu/fastify-webhook-verify#readme",
+  "dependencies": {
+    "fastify-plugin": "^5.0.1"
+  },
+  "peerDependencies": {
+    "fastify": "^5.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.16.0",
+    "@types/node": "^22.10.1",
+    "@vitest/coverage-v8": "^2.1.8",
+    "eslint": "^9.16.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "fastify": "^5.2.0",
+    "globals": "^15.13.0",
+    "prettier": "^3.4.2",
+    "rimraf": "^6.0.1",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.17.0",
+    "vitest": "^2.1.8"
+  }
+}
