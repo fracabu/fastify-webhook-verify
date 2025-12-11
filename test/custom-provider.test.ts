@@ -127,9 +127,7 @@ describe('Custom Provider', () => {
 
     it('should use custom signature extractor', async () => {
       const payload = JSON.stringify({ test: true });
-      const signature = createHmac('sha256', CUSTOM_SECRET)
-        .update(payload)
-        .digest('hex');
+      const signature = createHmac('sha256', CUSTOM_SECRET).update(payload).digest('hex');
 
       const response = await fastify.inject({
         method: 'POST',
@@ -188,9 +186,7 @@ describe('Custom Provider', () => {
 
     it('should verify base64 encoded signature', async () => {
       const payload = JSON.stringify({ data: 'test' });
-      const signature = createHmac('sha256', CUSTOM_SECRET)
-        .update(payload)
-        .digest('base64');
+      const signature = createHmac('sha256', CUSTOM_SECRET).update(payload).digest('base64');
 
       const response = await fastify.inject({
         method: 'POST',

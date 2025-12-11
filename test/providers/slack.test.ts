@@ -39,11 +39,7 @@ describe('SlackProvider', () => {
       const payload = '{"type":"event_callback"}';
       const timestamp = new Date(1234567890 * 1000);
 
-      const signature = provider.computeSignature(
-        Buffer.from(payload),
-        secret,
-        timestamp
-      );
+      const signature = provider.computeSignature(Buffer.from(payload), secret, timestamp);
 
       const fullSig = createSlackSignature(payload, secret, 1234567890);
       const expected = fullSig.slice('v0='.length);
@@ -52,9 +48,9 @@ describe('SlackProvider', () => {
     });
 
     it('should throw without timestamp', () => {
-      expect(() =>
-        provider.computeSignature(Buffer.from('{}'), secret)
-      ).toThrow('Timestamp is required');
+      expect(() => provider.computeSignature(Buffer.from('{}'), secret)).toThrow(
+        'Timestamp is required'
+      );
     });
   });
 
@@ -77,8 +73,7 @@ describe('SlackProvider', () => {
 
   describe('extractEventType', () => {
     it('should extract type from body', () => {
-      expect(provider.extractEventType({ type: 'event_callback' }))
-        .toBe('event_callback');
+      expect(provider.extractEventType({ type: 'event_callback' })).toBe('event_callback');
     });
 
     it('should return undefined for missing type', () => {

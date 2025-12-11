@@ -3,11 +3,7 @@ import { createHmac } from 'crypto';
 /**
  * Create a Stripe webhook signature
  */
-export function createStripeSignature(
-  payload: string,
-  secret: string,
-  timestamp: number
-): string {
+export function createStripeSignature(payload: string, secret: string, timestamp: number): string {
   const signedPayload = `${timestamp}.${payload}`;
   const signature = createHmac('sha256', secret).update(signedPayload).digest('hex');
   return `t=${timestamp},v1=${signature}`;
@@ -24,11 +20,7 @@ export function createGitHubSignature(payload: string, secret: string): string {
 /**
  * Create a Slack webhook signature
  */
-export function createSlackSignature(
-  payload: string,
-  secret: string,
-  timestamp: number
-): string {
+export function createSlackSignature(payload: string, secret: string, timestamp: number): string {
   const baseString = `v0:${timestamp}:${payload}`;
   const signature = createHmac('sha256', secret).update(baseString).digest('hex');
   return `v0=${signature}`;

@@ -51,11 +51,7 @@ describe('StripeProvider', () => {
       const payload = '{"type":"test"}';
       const timestamp = new Date(1234567890 * 1000);
 
-      const signature = provider.computeSignature(
-        Buffer.from(payload),
-        secret,
-        timestamp
-      );
+      const signature = provider.computeSignature(Buffer.from(payload), secret, timestamp);
 
       // Verify by computing manually
       const expected = createStripeSignature(payload, secret, 1234567890);
@@ -66,9 +62,9 @@ describe('StripeProvider', () => {
 
     it('should throw without timestamp', () => {
       const payload = '{"type":"test"}';
-      expect(() =>
-        provider.computeSignature(Buffer.from(payload), secret)
-      ).toThrow('Timestamp is required');
+      expect(() => provider.computeSignature(Buffer.from(payload), secret)).toThrow(
+        'Timestamp is required'
+      );
     });
   });
 
@@ -98,8 +94,9 @@ describe('StripeProvider', () => {
 
   describe('extractEventType', () => {
     it('should extract type from body', () => {
-      expect(provider.extractEventType({ type: 'payment_intent.succeeded' }))
-        .toBe('payment_intent.succeeded');
+      expect(provider.extractEventType({ type: 'payment_intent.succeeded' })).toBe(
+        'payment_intent.succeeded'
+      );
     });
 
     it('should return undefined for missing type', () => {

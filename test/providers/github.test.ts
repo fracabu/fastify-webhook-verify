@@ -27,7 +27,9 @@ describe('GitHubProvider', () => {
     });
 
     it('should throw on wrong prefix', () => {
-      expect(() => provider.extractSignature('sha1=abc123')).toThrow('Invalid GitHub signature format');
+      expect(() => provider.extractSignature('sha1=abc123')).toThrow(
+        'Invalid GitHub signature format'
+      );
     });
   });
 
