@@ -1,139 +1,109 @@
-# fastify-webhook-verify
+<h1 align="center">fastify-webhook-verify</h1>
+<h3 align="center">Multi-provider webhook signature verification for Fastify</h3>
 
-Multi-provider webhook signature verification for Fastify with replay protection and TypeScript support.
+<p align="center">
+  <em>Replay protection and TypeScript support</em>
+</p>
 
-[![npm version](https://badge.fury.io/js/fastify-webhook-verify.svg)](https://www.npmjs.com/package/fastify-webhook-verify)
-[![CI](https://github.com/fracabu/fastify-webhook-verify/actions/workflows/ci.yml/badge.svg)](https://github.com/fracabu/fastify-webhook-verify/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<p align="center">
+  <a href="https://www.npmjs.com/package/fastify-webhook-verify"><img src="https://img.shields.io/npm/v/fastify-webhook-verify.svg" alt="npm version" /></a>
+  <img src="https://github.com/fracabu/fastify-webhook-verify/actions/workflows/ci.yml/badge.svg" alt="CI" />
+  <img src="https://img.shields.io/badge/Fastify-5.x-000000?style=flat-square&logo=fastify" alt="Fastify" />
+</p>
 
-## Features
+<p align="center">
+  :gb: <a href="#english">English</a> | :it: <a href="#italiano">Italiano</a>
+</p>
 
-- **Multi-provider support**: Stripe, GitHub, Twilio, Slack, Shopify out of the box
-- **Custom providers**: Easy to add your own webhook providers
-- **Replay protection**: Built-in protection against replay attacks with configurable tolerance
-- **TypeScript-first**: Full type safety with TypeScript declarations
-- **Fastify-native**: Uses Fastify's preHandler pattern for clean route integration
-- **Automatic raw body handling**: Preserves raw body for signature verification
+---
 
-## Installation
+## Overview
+
+<!-- ![fastify-webhook-verify Overview](assets/webhook-overview.png) -->
+
+---
+
+<a name="english"></a>
+## :gb: English
+
+### Features
+
+- **Multi-provider**: Stripe, GitHub, Twilio, Slack, Shopify out of the box
+- **Custom providers**: Easy to add your own
+- **Replay protection**: Built-in with configurable tolerance
+- **TypeScript-first**: Full type safety
+- **Fastify-native**: Uses preHandler pattern
+
+### Supported Providers
+
+| Provider | Algorithm | Signature Header |
+|----------|-----------|------------------|
+| Stripe | HMAC-SHA256 | `Stripe-Signature` |
+| GitHub | HMAC-SHA256 | `X-Hub-Signature-256` |
+| Twilio | HMAC-SHA1 | `X-Twilio-Signature` |
+| Slack | HMAC-SHA256 | `X-Slack-Signature` |
+| Shopify | HMAC-SHA256 | `X-Shopify-Hmac-SHA256` |
+
+### Install
 
 ```bash
 npm install fastify-webhook-verify
 ```
 
-## Quick Start
+### Quick Start
 
 ```typescript
-import Fastify from 'fastify';
-import webhookVerify from 'fastify-webhook-verify';
+import Fastify from 'fastify'
+import webhookVerify from 'fastify-webhook-verify'
 
-const fastify = Fastify({ logger: true });
+const fastify = Fastify()
 
 await fastify.register(webhookVerify, {
   providers: {
     stripe: process.env.STRIPE_WEBHOOK_SECRET,
-    github: process.env.GITHUB_WEBHOOK_SECRET,
-  },
-});
+    github: process.env.GITHUB_WEBHOOK_SECRET
+  }
+})
 
-// Stripe webhook endpoint
 fastify.post('/webhooks/stripe', {
-  preHandler: fastify.webhookVerify({ provider: 'stripe' }),
+  preHandler: fastify.webhookVerify({ provider: 'stripe' })
 }, async (request) => {
-  const { eventType, timestamp } = request.webhook!;
-  console.log(`Received Stripe event: ${eventType}`);
-
-  // Handle the webhook event
-  return { received: true };
-});
-
-// GitHub webhook endpoint
-fastify.post('/webhooks/github', {
-  preHandler: fastify.webhookVerify({ provider: 'github' }),
-}, async (request) => {
-  console.log('Received GitHub webhook');
-  return { received: true };
-});
-
-await fastify.listen({ port: 3000 });
+  const { eventType } = request.webhook!
+  console.log(`Received: ${eventType}`)
+  return { received: true }
+})
 ```
 
-## Supported Providers
+---
 
-| Provider | Algorithm | Signature Header | Timestamp |
-|----------|-----------|------------------|-----------|
-| Stripe | HMAC-SHA256 | `Stripe-Signature` | In header |
-| GitHub | HMAC-SHA256 | `X-Hub-Signature-256` | - |
-| Twilio | HMAC-SHA1 | `X-Twilio-Signature` | - |
-| Slack | HMAC-SHA256 | `X-Slack-Signature` | `X-Slack-Request-Timestamp` |
-| Shopify | HMAC-SHA256 | `X-Shopify-Hmac-SHA256` | - |
+<a name="italiano"></a>
+## :it: Italiano
 
-## Configuration
+### Funzionalita
 
-### Plugin Options
+- **Multi-provider**: Stripe, GitHub, Twilio, Slack, Shopify pronti all'uso
+- **Provider personalizzati**: Facile aggiungere i propri
+- **Protezione replay**: Integrata con tolleranza configurabile
+- **TypeScript-first**: Piena type safety
+- **Fastify-native**: Usa pattern preHandler
 
-```typescript
-interface FastifyWebhookVerifyOptions {
-  // Provider secrets
-  providers?: {
-    stripe?: string;
-    github?: string;
-    twilio?: string;
-    slack?: string;
-    shopify?: string;
-  };
+### Provider Supportati
 
-  // Replay protection settings (default: enabled with 5 min tolerance)
-  replayProtection?: {
-    enabled: boolean;
-    tolerance?: number; // seconds, default: 300
-    storage?: ReplayStorage; // custom storage (e.g., Redis)
-  };
+| Provider | Algoritmo | Header Firma |
+|----------|-----------|--------------|
+| Stripe | HMAC-SHA256 | `Stripe-Signature` |
+| GitHub | HMAC-SHA256 | `X-Hub-Signature-256` |
+| Twilio | HMAC-SHA1 | `X-Twilio-Signature` |
+| Slack | HMAC-SHA256 | `X-Slack-Signature` |
+| Shopify | HMAC-SHA256 | `X-Shopify-Hmac-SHA256` |
 
-  // Custom error handler
-  errorHandler?: (error: Error, request: FastifyRequest, reply: FastifyReply) => void;
+### Installazione
 
-  // Hook called after successful verification
-  onVerify?: (result: WebhookVerificationResult, request: FastifyRequest) => void;
-
-  // Enable logging of verification attempts
-  logAttempts?: boolean;
-}
+```bash
+npm install fastify-webhook-verify
 ```
 
-### Route Options
-
-```typescript
-interface WebhookRouteOptions {
-  provider: 'stripe' | 'github' | 'twilio' | 'slack' | 'shopify' | 'custom';
-  secret?: string; // Override global provider secret
-  customConfig?: CustomProviderConfig; // For custom providers
-  replayProtection?: Partial<ReplayProtectionConfig>; // Override per-route
-}
-```
-
-## Examples
-
-### Multiple Environments
-
-```typescript
-// Different secrets for live vs test
-fastify.post('/webhooks/stripe/live', {
-  preHandler: fastify.webhookVerify({
-    provider: 'stripe',
-    secret: process.env.STRIPE_LIVE_SECRET!,
-  }),
-}, handler);
-
-fastify.post('/webhooks/stripe/test', {
-  preHandler: fastify.webhookVerify({
-    provider: 'stripe',
-    secret: process.env.STRIPE_TEST_SECRET!,
-  }),
-}, handler);
-```
-
-### Custom Provider
+### Provider Personalizzato
 
 ```typescript
 fastify.post('/webhooks/internal', {
@@ -143,120 +113,13 @@ fastify.post('/webhooks/internal', {
     customConfig: {
       name: 'internal-service',
       signatureHeader: 'X-Internal-Signature',
-      timestampHeader: 'X-Internal-Timestamp',
-      algorithm: 'sha256',
-      signatureEncoding: 'hex',
-      buildPayload: (body, ts) => `${ts}.${body.toString()}`,
-    },
-  }),
-}, handler);
+      algorithm: 'sha256'
+    }
+  })
+}, handler)
 ```
 
-### Custom Error Handler
-
-```typescript
-await fastify.register(webhookVerify, {
-  providers: { stripe: process.env.STRIPE_WEBHOOK_SECRET },
-  errorHandler: (error, request, reply) => {
-    request.log.error({ err: error }, 'Webhook verification failed');
-
-    // RFC 9457 Problem Details response
-    reply.status(error.statusCode).send({
-      type: `https://api.example.com/errors/${error.code.toLowerCase()}`,
-      title: error.message,
-      status: error.statusCode,
-    });
-  },
-});
-```
-
-### Redis Storage for Replay Protection
-
-```typescript
-import { createClient } from 'redis';
-
-const redis = createClient({ url: process.env.REDIS_URL });
-await redis.connect();
-
-const redisStorage = {
-  async has(nonce: string): Promise<boolean> {
-    const exists = await redis.exists(`webhook:nonce:${nonce}`);
-    return exists === 1;
-  },
-  async set(nonce: string, expiresAt: number): Promise<void> {
-    const ttl = Math.ceil((expiresAt - Date.now()) / 1000);
-    await redis.setEx(`webhook:nonce:${nonce}`, ttl, '1');
-  },
-};
-
-await fastify.register(webhookVerify, {
-  providers: { stripe: process.env.STRIPE_WEBHOOK_SECRET },
-  replayProtection: {
-    enabled: true,
-    tolerance: 300,
-    storage: redisStorage,
-  },
-});
-```
-
-### Disable Replay Protection Per-Route
-
-```typescript
-fastify.post('/webhooks/stripe/idempotent', {
-  preHandler: fastify.webhookVerify({
-    provider: 'stripe',
-    replayProtection: { enabled: false },
-  }),
-}, handler);
-```
-
-### Audit Logging Hook
-
-```typescript
-await fastify.register(webhookVerify, {
-  providers: { stripe: process.env.STRIPE_WEBHOOK_SECRET },
-  onVerify: async (result, request) => {
-    await auditLog.record({
-      timestamp: new Date(),
-      provider: result.provider,
-      eventType: result.eventType,
-      success: result.valid,
-      ip: request.ip,
-    });
-  },
-});
-```
-
-## Accessing Webhook Data
-
-After verification, webhook data is available on `request.webhook`:
-
-```typescript
-interface WebhookData {
-  verified: boolean;
-  provider: string;
-  timestamp?: Date;
-  rawBody: Buffer;
-  eventType?: string;
-}
-```
-
-## Error Types
-
-The plugin exports typed error classes:
-
-```typescript
-import {
-  WebhookError,
-  MissingSignatureError,
-  InvalidSignatureError,
-  TimestampExpiredError,
-  ReplayAttackError,
-  MissingRawBodyError,
-  UnknownProviderError,
-  MissingSecretError,
-} from 'fastify-webhook-verify';
-```
+---
 
 ## Requirements
 
@@ -267,3 +130,10 @@ import {
 
 MIT
 
+---
+
+<p align="center">
+  <a href="https://github.com/fracabu">
+    <img src="https://img.shields.io/badge/Made_by-fracabu-8B5CF6?style=flat-square" alt="Made by fracabu" />
+  </a>
+</p>
