@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-10-28
+
+### Changed
+
+- `fastify-plugin` updated to v6 (all 74 tests pass against Fastify 5.12.7)
+- Dev dependencies updated within their current major versions
+- CI matrix now includes Node.js 24; GitHub Actions updated (`checkout` and `setup-node` v7, `action-gh-release` v2)
+
+### Security
+
+- Releases are published through npm trusted publishing (OIDC) and staged for 2FA approval, instead of a long-lived `NPM_TOKEN`
+
 ## [1.0.0] - 2025-12-11
 
 ### Added

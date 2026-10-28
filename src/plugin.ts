@@ -58,7 +58,7 @@ export function fastifyWebhookVerifyPlugin(
     'application/json',
     { parseAs: 'buffer' },
     (req, body: Buffer, done) => {
-      (req as unknown as FastifyRequest).rawBody = body;
+      req.rawBody = body;
       try {
         const json: unknown = JSON.parse(body.toString());
         done(null, json);
