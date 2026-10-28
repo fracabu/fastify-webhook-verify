@@ -1,6 +1,6 @@
 {
   "name": "fastify-webhook-verify",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Multi-provider webhook signature verification for Fastify with replay protection and TypeScript support",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -80,7 +80,7 @@
   },
   "homepage": "https://github.com/fracabu/fastify-webhook-verify#readme",
   "dependencies": {
-    "fastify-plugin": "^5.0.1"
+    "fastify-plugin": "^6.0.1"
   },
   "peerDependencies": {
     "fastify": "^5.0.0"
@@ -92,7 +92,7 @@
     "eslint": "^9.16.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
-    "fastify": "^5.2.0",
+    "fastify": "^5.12.7",
     "globals": "^15.13.0",
     "prettier": "^3.4.2",
     "rimraf": "^6.0.1",
